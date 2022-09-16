@@ -82,8 +82,7 @@ year_count_plot <- year_count_data %>%
   ggplot(aes(x = year,
              y = value,
              group = name,
-             color = name)
-         ) + 
+             color = name)) + 
   geom_line() +
   scale_y_continuous(limits = c(min_y, max_y),  # add min, max and values for scale_y_continuous
                      breaks = y_values,
@@ -98,15 +97,16 @@ year_count_plot <- year_count_data %>%
         subtitle = "Total of articles by area",
         x = "Publication Year",
         y = "Total number of papers",
-        caption = "Elaborated by Josue G \n Graphic inspired by Pat Schloss \n https://riffomonas.org/code_club/2022-05-12-pubs-per-year") +
+        caption = "Elaborated by Josue G \nGraphic inspired by Pat Schloss") +
   theme_classic() +
   theme(plot.title = element_text(hjust = 0.5),
         plot.subtitle = element_text(hjust = 0.5),
+        plot.caption.position = "plot",
+        plot.caption = element_text(hjust = 0),
         text = element_text(size = 15),
         axis.text = element_text(size = 13))
 
 year_count_plot # check plot
-
 
 
 # get percentage data
@@ -123,8 +123,7 @@ percentage_plot <- percentage_data %>%
   ggplot(aes(x = year,
              y = value,
              group = name,
-             color = name)
-         ) + 
+             color = name)) + 
   geom_line() +
   scale_y_log10(limits = c(NA, 100),                             # transform y values into log10 form
                 breaks = c(0.01, 0.1, 1, 10, 100),
@@ -138,7 +137,7 @@ percentage_plot <- percentage_data %>%
         subtitle = "Percentage of articles with respect to the total number of articles in the PubMed database",
         x = "Publication Year",
         y = "Percentage (%)",
-        caption = "Elaborated by Josue G \n Graphic inspired by Pat Schloss \n https://riffomonas.org/code_club/2022-05-12-pubs-per-year") +
+        caption = "Elaborated by Josue G \nGraphic inspired by Pat Schloss") +
     theme_classic() +
   theme(plot.title = element_text(hjust = 0.5),
         plot.subtitle = element_text(hjust = 0.5),
@@ -163,26 +162,34 @@ year_perc_plot <- plot_grid(year_count_plot +
                             labels = c("Total number of papers in PubMed",  # Add subtitles as labels 
                                        "Percentage of papers in PubMed"),
                             label_x = c(0.2, 0.2),                         # Customize labels
-                            label_size = 15
-                            )
+                            label_size = 15)
 
-
+# create legend
 legend <- get_legend(year_count_plot +
                        theme(legend.position = "bottom"))                  # Extract legend and adjust it to fit the 2 plots together.
 
-
+# create title
 title <- ggdraw() +
   draw_label("The popularity of my favorite areas of scientific research", # Add title as ggdraw object
              size = 18,                                                    # Customize labels
              x = 0.5,
              hjust = 0.5)
 
+# create caption
+caption <- ggdraw() +                                                     # Add caption as ggdraw object
+  draw_label("Data source: PubMed (REntrez) \nElaborated by Josue G \nGraphic inspired by Pat Schloss", 
+             size = 10,                                                    # Customize labels
+             x = 0.5,
+             y = 0.5,
+             hjust = 0.5)
 
+# join all elements using plot_gride
 year_perc_plot_2 <- plot_grid(title,                                      # Join all objects 
                               year_perc_plot,
                               legend,
+                              caption,
                               ncol = 1,                                   # ncol = 1 indicates that the objects should be on top of each other in one column 
-                              rel_heights = c(0.5, 2, 0.5)) +               # rel_heights controls the relative size of each object
+                              rel_heights = c(0.5, 2, 0.5, 0.5)) +               # rel_heights controls the relative size of each object
   theme(plot.background = element_rect(fill = "white",
                                        colour = NA))
 
@@ -191,35 +198,8 @@ year_perc_plot_2 # check plot
 
 # save grid plot
 
-ggsave(filename = "figures/bioinfo_vs_crispr.png",
+ggsave(filename = "../figures/bioinfo_vs_crispr.png",
        plot = year_perc_plot_2,
-       width=20, 
+       width=15, 
        height=10,
        dpi = 300)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
