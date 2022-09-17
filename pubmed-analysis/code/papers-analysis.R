@@ -1,5 +1,5 @@
-# Script to access ncbi's pubmed database to 
-# search and the plot number of papers by year
+# Script to access NCBI's pubmed database to 
+# search and plot the number of papers by year
 
 
 # Install packages if needed
